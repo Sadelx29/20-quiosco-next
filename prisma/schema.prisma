@@ -30,6 +30,7 @@ model Order {
   total   Float
   date    DateTime  @default(now())
   status  Boolean   @default(false)
+  createdAt DateTime @default(now())
   orderReadyAt  DateTime?
   orderProducts OrderProducts[]
 }
