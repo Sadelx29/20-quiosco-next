@@ -12,7 +12,7 @@ type AdminRouteProps = {
 
 export default function AdminRoute({ link }: AdminRouteProps) {
   const pathname = usePathname()
-  const isActive = pathname.startsWith(link.url)
+  const isActive = pathname?.startsWith(link.url)
 
   return (
     <Link

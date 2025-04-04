@@ -7,7 +7,6 @@ import { formatCurrency } from "@/src/utils";
 import { createOrder } from "@/actions/create-order-action";
 import { OrderSchema } from "@/src/schema";
 import { useTransition } from "react";
-import { socket } from "@/src/lib/socket-client"
 
 
 export default function OrderSummary() {
@@ -43,7 +42,6 @@ export default function OrderSummary() {
         });
       }
       // Emitir el evento de socket
-      socket.emit("orden-nueva", response);
 
       toast.success("Pedido Realizado Correctamente");
       clearOrder();

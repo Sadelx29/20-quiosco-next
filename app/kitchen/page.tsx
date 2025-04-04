@@ -1,5 +1,4 @@
 "use client"
-import { socket } from "@/src/lib/socket-client"
 import useSWR from "swr"
 
 type Orden = {
@@ -34,7 +33,6 @@ export default function KitchenPage() {
       await fetch(`/api/orders/${id}/ready`, {
         method: "PUT",
       })
-      socket.emit("orden-preparada", id)
       mutate() // 🔄 fuerza la recarga después de marcar como preparada
     } catch (error) {
       console.error("Error marcando orden:", error)

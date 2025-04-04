@@ -21,11 +21,11 @@ async function searchProducts(searchTerm: string) {
 
 export default async function SearchPage({ searchParams }: { searchParams: { search: string } }) {
 
-    const products = await searchProducts(searchParams.search)
+    const products = await searchProducts(searchParams?.search)
 
     return (
         <>
-            <Heading>Resultados de búsqueda: {searchParams.search}</Heading>
+            <Heading>Resultados de búsqueda: {searchParams?.search}</Heading>
 
             <GoBackButton />
 

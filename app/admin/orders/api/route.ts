@@ -4,7 +4,7 @@ import { getLocalDayRange } from "@/src/utils/index"
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
-  const dateStr = searchParams.get("date")
+  const dateStr = searchParams?.get("date")
 
   const {start, end} = getLocalDayRange('America/Santo_Domingo')
 

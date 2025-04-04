@@ -8,7 +8,7 @@ export async function PUT(
 ) {
 
   const product = await prisma.product.findUnique({
-    where: { id: Number(params.id) },
+    where: { id: Number(params?.id) },
   })
 
   if (!product) {
