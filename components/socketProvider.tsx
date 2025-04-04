@@ -1,21 +1,14 @@
 "use client"
-
-import { useEffect } from "react"
+import { ReactNode, useEffect } from "react"
 import { socket } from "@/src/lib/socket-client"
 
-export default function SocketProvider() {
+export function SocketProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
-    fetch("/api/socket") // inicializa servidor
-    socket.connect()
-
-    socket.on("connect", () => {
-      console.log("🔌 Socket conectado:", socket.id)
-    })
-
+    if (!socket.connected) socket.connect()
     return () => {
       socket.disconnect()
     }
   }, [])
 
-  return null
+  return <>{children}</>
 }

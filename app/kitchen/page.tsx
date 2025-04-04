@@ -1,6 +1,6 @@
 "use client"
-
-import { useEffect, useState } from "react"
+import { socket } from "@/src/lib/socket-client"
+import useSWR from "swr"
 
 type Orden = {
   id: number
@@ -14,33 +14,28 @@ type Orden = {
 }
 
 export default function KitchenPage() {
-  const [ordenes, setOrdenes] = useState<Orden[]>([])
-  const [cargando, setCargando] = useState(true)
+  const url = "/api/orders/pending"
 
-  // 🟡 Obtener órdenes pendientes al cargar la vista
-  useEffect(() => {
-    const fetchOrdenes = async () => {
-      try {
-        const res = await fetch("/api/orders/pending")
-        const data = await res.json()
-        setOrdenes(data)
-      } catch (error) {
-        console.error("Error cargando órdenes:", error)
-      } finally {
-        setCargando(false)
-      }
-    }
+  const fetcher = () =>
+    fetch(url).then((res) => res.json())
 
-    fetchOrdenes()
-  }, [])
+  const {
+    data: ordenes = [],
+    isLoading,
+    mutate
+  } = useSWR<Orden[]>(url, fetcher, {
+    refreshInterval: 10000, // 🔁 actualiza cada 10 segundos
+    revalidateOnFocus: true, // también refresca si el usuario vuelve a la pestaña
 
-  // 🟢 Marcar como preparada
+  })
+
   const marcarComoPreparada = async (id: number) => {
     try {
       await fetch(`/api/orders/${id}/ready`, {
         method: "PUT",
       })
-      setOrdenes(prev => prev.filter(o => o.id !== id))
+      socket.emit("orden-preparada", id)
+      mutate() // 🔄 fuerza la recarga después de marcar como preparada
     } catch (error) {
       console.error("Error marcando orden:", error)
     }
@@ -50,7 +45,7 @@ export default function KitchenPage() {
     <main className="p-6">
       <h1 className="text-3xl font-bold mb-4">👨‍🍳 Módulo de Cocina</h1>
 
-      {cargando ? (
+      {isLoading ? (
         <p className="text-gray-600">Cargando órdenes...</p>
       ) : ordenes.length === 0 ? (
         <p className="text-gray-600">No hay órdenes pendientes.</p>

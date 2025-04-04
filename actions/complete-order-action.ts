@@ -24,7 +24,6 @@ export async function completeOrder(formData: FormData) {
 
             revalidatePath('/admin/orders')
         } catch (error) {
-            console.log(error)
         }
     }
     

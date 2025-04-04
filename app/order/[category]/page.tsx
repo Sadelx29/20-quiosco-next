@@ -7,7 +7,8 @@ async function getProducts(category: string) {
     where: {
       category: {
         slug: category
-      }
+      },
+      visible: true
     }
   })
   return products

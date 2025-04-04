@@ -26,6 +26,5 @@ export async function createOrder(data: unknown) {
             }
         })
     } catch (error) {
-        console.log(error)
     }
 }

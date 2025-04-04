@@ -12,15 +12,19 @@ export default function OrdersPage() {
     return now.toISOString().split("T")[0]; // YYYY-MM-DD
   });
 
+
   const url = `/admin/orders/api?date=${selectedDate}`;
 
   const fetcher = () =>
     fetch(url)
       .then((res) => res.json())
       .then((data) => data);
-  const { data, isLoading } = useSWR<OrderWithProducts[]>(url, fetcher, {
-    refreshInterval: 60000,
-    revalidateOnFocus: false,
+  const { data, isLoading, mutate,
+
+    } = useSWR<OrderWithProducts[]>(url, fetcher, {
+      refreshInterval: 10000, // 🔁 actualiza cada 10 segundos
+    revalidateOnFocus: true, // también refresca si el usuario vuelve a la pestaña
+
   });
 
   const [filter, setFilter] = useState<
@@ -92,7 +96,7 @@ export default function OrdersPage() {
       ) : filteredOrders.length ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-5">
           {filteredOrders.map((order) => (
-            <OrderCard key={order.id} order={order} />
+            <OrderCard key={order.id} order={order} mutate={mutate} />
           ))}
         </div>
       ) : (

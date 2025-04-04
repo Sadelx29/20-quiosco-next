@@ -22,6 +22,7 @@ model Product {
   categoryId  Int
   category  Category @relation(fields: [categoryId], references: [id])
   orderItems OrderProducts[]
+  visible    Boolean          @default(true) // 🆕 Campo para mostrar u ocultar
 }
 
 model Order {

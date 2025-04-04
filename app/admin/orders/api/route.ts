@@ -1,34 +1,32 @@
 import { prisma } from "@/src/lib/prisma"
+import { getLocalDayRange } from "@/src/utils/index"
+
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const dateStr = searchParams.get("date")
 
-  const date = dateStr ? new Date(dateStr) : new Date()
+  const {start, end} = getLocalDayRange('America/Santo_Domingo')
 
-  const start = new Date(date)
-  start.setHours(0, 0, 0, 0)
 
-  const end = new Date(date)
-  end.setHours(23, 59, 59, 999)
 
   const orders = await prisma.order.findMany({
     where: {
-      date: {
+      createdAt: {
         gte: start,
-        lte: end,
-      },
+        lte: end
+      }
     },
     orderBy: {
-      createdAt: "asc",
+      createdAt: "asc"
     },
     include: {
       orderProducts: {
         include: {
-          product: true,
-        },
-      },
-    },
+          product: true
+        }
+      }
+    }
   })
 
   return Response.json(orders)
